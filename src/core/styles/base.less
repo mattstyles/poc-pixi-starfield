@@ -1,4 +1,15 @@
 
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow:hidden;
+}
+
+body {
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     margin: 0;
     font-family: 'Helvetica Neue', 'Helvetica', 'Lucida Grande', 'Arial', sans-serif;
@@ -7,4 +18,8 @@ body {
     background: @--color-white10;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: greyscale;
+}
+
+canvas {
+    display: block;
 }
