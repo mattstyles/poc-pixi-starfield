@@ -18,7 +18,7 @@
     "make:scripts": "NODE_PATH=./src/components:./src NODE_ENV=prod browserify ./src/main.js --extension .jsx -t babelify | uglifyjs > ./dist/main.js",
     "watch:scripts": "NODE_PATH=./src/components:./src watchify ./src/main.js --extension .jsx -t babelify -t flowcheck --debug -o ./dist/main.js -v",
     "make:polyfill": "browserify ./src/polyfill.js | uglifyjs > ./dist/polyfill.js",
-    "make:assets": "cp -r ./src/assets ./dist/assets",
+    "make:assets": "cp -r ./src/assets/* ./dist/assets",
     "make:html": "mustache package.json ./src/tmpl/index.hjs > ./dist/index.html",
     "watch:html": "watch 'npm run make:html' ./src/tmpl",
     "prebuild": "npm run clean",
