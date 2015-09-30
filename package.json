@@ -63,12 +63,12 @@
   "homepage": "https://github.com/mattstyles/poc-pixi-starfield",
   "license": "WTFPL",
   "dependencies": {
+    "@mattstyles/tick": "^0.1.0",
     "babel": "^5.8.21",
     "eventemitter3": "^1.1.1",
     "mathutil": "^0.1.0",
     "normalize.css": "^3.0.3",
     "pixi.js": "^3.0.7",
-    "raf-stream": "^3.0.0",
     "stats.js": "^1.0.0",
     "whatwg-fetch": "^0.9.0"
   },
