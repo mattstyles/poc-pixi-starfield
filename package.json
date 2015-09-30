@@ -65,6 +65,7 @@
   "dependencies": {
     "babel": "^5.8.21",
     "eventemitter3": "^1.1.1",
+    "mathutil": "^0.1.0",
     "normalize.css": "^3.0.3",
     "pixi.js": "^3.0.7",
     "raf-stream": "^3.0.0",
