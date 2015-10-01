@@ -1,12 +1,31 @@
 
 import Pixi from 'pixi.js'
 import Bezier from 'bezier-easing'
+import random from 'lodash.random'
 
 import starMap from 'core/starmap'
 import APP from 'constants/app'
 import { colorToVal } from 'utils/color'
 import { lerp } from 'mathutil'
 
+/**
+ * Starfield class
+ * Generates a starfield
+ * @class
+ * ---
+ * @TODO
+ * - still looks fairly uniform although stars are grouped together nicely, effectively
+ *   disappearing in dark patches. Probably needs to be some variety i.e. bright stars
+ *   are close and bright, dark ones are near invisible and larger, needs to be some random
+ *   perturbation
+ * - might be worth adding a few random larger brighter stars periodically (or defined by some
+ *   pattern across a whole system) to break up the uniformity
+ * - _cloud-stars_ need to be created to give some overall colour variance to the background
+ *   without simply increasing star density, these should be larger, coloured and largely
+ *   transparent so that they overlap. Blacks being blacks is good so only _light_ patches should
+ *   have these clouds to give an overall colour to the brighter spots.
+ * - randomise textures used, or maybe use different textures depending on position (light/dark)
+ */
 export default class Starfield {
     constructor() {
         this.container = new Pixi.Container()
@@ -14,14 +33,15 @@ export default class Starfield {
         this.tex = null
 
         // Container density
-        this.density = .0025 * APP.get( 'CANVAS_WIDTH' ) * APP.get( 'CANVAS_HEIGHT' )
+        //this.density = .0025 * APP.get( 'CANVAS_WIDTH' ) * APP.get( 'CANVAS_HEIGHT' )
+        this.density = APP.get( 'NUM_STARS' )
 
         /**
          * Star values
          */
         this.scale = {
-            min: .75,
-            max: 1.25
+            min: .4,
+            max: .95
         }
 
         this.alpha = {
@@ -38,7 +58,7 @@ export default class Starfield {
     }
 
     init() {
-        this.tex = Pixi.loader.resources[ 'assets/star3x3.png' ].texture
+        this.tex = Pixi.loader.resources[ APP.get( 'STAR_TEX' ) ].texture
 
         for( let i = 0; i < this.density; i++ ) {
             this.container.addChild( this.createStar() )
@@ -56,7 +76,9 @@ export default class Starfield {
 
         // Further stars are going to be larger, spread more, to provide background
         // so interpolate between min and max
-        let scale = lerp( 1 - brightness, this.scale.min, this.scale.max )
+        // Add some variance with a linear random to make a little larger or smaller
+        // let scale = lerp( 1 - brightness, this.scale.min, this.scale.max )
+        let scale = lerp( random( .4, 1.6 ) * ( 1 - brightness ), this.scale.min, this.scale.max )
         star.scale.set( scale, scale )
 
         // Tint should be controlled by brightness, controlled by temp (research)
@@ -70,11 +92,8 @@ export default class Starfield {
         let star = new Pixi.Sprite( this.tex )
         this.stars.push( star )
         star.position.set( ~~( Math.random() * APP.get( 'CANVAS_WIDTH' ) ), ~~( Math.random() * APP.get( 'CANVAS_HEIGHT' ) ) )
-        // let scale = lerp( Math.random(), this.scale.min, this.scale.max )
-        // star.scale.set( scale, scale )
-        //star.alpha = lerp( Math.random(), this.alpha.min, this.alpha.max )
-        // star.tint = colorToVal( Math.random(), this.color.from, this.color.to )
 
+        // Calc size, alpha and tint based on distance/brightness/temperature/etc
         star = this.getStarDistance( star )
 
         return star

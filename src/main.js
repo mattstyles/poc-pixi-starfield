@@ -7,7 +7,6 @@ import stats from 'core/stats'
 import renderer from 'core/renderer'
 
 import APP from 'constants/app'
-import { colorToVal } from 'utils/color'
 import Starfield from 'components/starfield'
 
 var stage = new Pixi.Container()
@@ -17,20 +16,11 @@ function render() {
     renderer.render( stage )
 }
 
-function gamePause() {
-    renderTick.pause()
-    aiTick.pause()
-}
-function gameResume() {
-    renderTick.resume()
-    aiTick.resume()
-}
-
 let renderTick = new Tick()
     .on( 'data', dt => {
         stats.begin()
 
-        // render()
+        render( dt )
 
         stats.end()
     })
@@ -41,6 +31,17 @@ let aiTick = new Tick({
     .on( 'data', dt => {
         stars.update( dt )
     })
+
+function gamePause() {
+    renderTick.pause()
+    aiTick.pause()
+}
+function gameResume() {
+    renderTick.resume()
+    aiTick.resume()
+}
+
+
 
 gamePause()
 
@@ -54,7 +55,7 @@ function init() {
 }
 
 Pixi.loader
-    .add( 'assets/star3x3.png' )
+    .add( APP.get( 'STAR_TEX' ) )
     .load( init )
 
 
