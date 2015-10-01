@@ -40,8 +40,8 @@ export default class Starfield {
          * Star values
          */
         this.scale = {
-            min: .4,
-            max: .95
+            min: .05,
+            max: .25
         }
 
         this.alpha = {
@@ -99,7 +99,7 @@ export default class Starfield {
         return star
     }
 
-    update() {
+    update( pos = { x: 0, y: 0} ) {
         // for ( let i = 0; i < this.density; i++ ) {
         //     if ( Math.random() > .98 ) {
         //         try {
@@ -111,6 +111,8 @@ export default class Starfield {
         //
         //     }
         // }
+
+        this.container.position.set( pos.x || 0, pos.y || 0 )
     }
 
 }

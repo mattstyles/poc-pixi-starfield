@@ -7,7 +7,13 @@ const APP = toMap({
 
     // .05% of screen density
     NUM_STARS: .0005 * window.innerWidth * window.innerHeight,
-    STAR_TEX: 'assets/star8x8.png'
+    STAR_TEX: 'assets/circle32.png',
+
+    // Movement
+    VEL_Y: .5,
+    VEL_X: .5,
+    FRICTION: .88,
+    SHIELD: .25
 })
 
 export default APP

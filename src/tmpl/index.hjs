@@ -7,8 +7,23 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="./styles.css" media="screen" charset="utf-8">
     <script src="./polyfill.js" charset="utf-8"></script>
+
+    <style>
+        .pos {
+            position: absolute;
+            z-index: 1000;
+            margin-left: 4px;
+            font-size: 20px;
+            color:white;
+            font-family: 'Coolville';
+        }
+    </style>
 </head>
 <body>
+    <div class="pos">
+        <span class="x"></span>
+        <span class="y" style="margin-left: 4px"></span>
+    </div>
     <script src="./main.js" charset="utf-8"></script>
 </body>
 </html>
