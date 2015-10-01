@@ -20,16 +20,16 @@ var elX = document.querySelector( '.x' )
 var elY = document.querySelector( '.y' )
 
 quay.on( '<up>', event => {
-    vel.y -= APP.get( 'VEL_Y' )
-})
-quay.on( '<down>', event => {
     vel.y += APP.get( 'VEL_Y' )
 })
+quay.on( '<down>', event => {
+    vel.y -= APP.get( 'VEL_Y' )
+})
 quay.on( '<left>', event => {
-    vel.x -= APP.get( 'VEL_X' )
+    vel.x += APP.get( 'VEL_X' )
 })
 quay.on( '<right>', event => {
-    vel.x += APP.get( 'VEL_X' )
+    vel.x -= APP.get( 'VEL_X' )
 })
 
 function render() {
