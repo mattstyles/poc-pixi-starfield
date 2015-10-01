@@ -43,7 +43,7 @@ export default class Starfield {
          * Star values
          */
         this.scale = {
-            min: .05,
+            min: .085,
             max: .25
         }
 
