@@ -30,7 +30,7 @@ let renderTick = new Tick()
     .on( 'data', dt => {
         stats.begin()
 
-        render()
+        // render()
 
         stats.end()
     })
@@ -50,7 +50,7 @@ function init() {
     stage.addChild( stars.container )
 
     gameResume()
-    //render()
+    render()
 }
 
 Pixi.loader
