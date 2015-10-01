@@ -29,7 +29,13 @@ import { lerp } from 'mathutil'
 export default class Starfield {
     constructor() {
         this.container = new Pixi.Container()
+        this.container.position.set(
+            APP.get( 'CANVAS_WIDTH' ) / 2,
+            APP.get( 'CANVAS_HEIGHT' ) / 2
+        )
+        console.log( this.container.position )
         this.stars = []
+        this.pool = []
         this.tex = null
 
         // Container density
@@ -88,10 +94,26 @@ export default class Starfield {
         return star
     }
 
+    createStarPosition( star, rect ) {
+        let x = random( rect.x - rect.width, rect.x + rect.width )
+        let y = random( rect.y - rect.height, rect.y + rect.height )
+        star.position.set( x, y )
+        return star
+    }
+
     createStar() {
         let star = new Pixi.Sprite( this.tex )
         this.stars.push( star )
-        star.position.set( ~~( Math.random() * APP.get( 'CANVAS_WIDTH' ) ), ~~( Math.random() * APP.get( 'CANVAS_HEIGHT' ) ) )
+        //star.position.set( ~~( Math.random() * APP.get( 'CANVAS_WIDTH' ) ), ~~( Math.random() * APP.get( 'CANVAS_HEIGHT' ) ) )
+
+        // This isnt really width and height, but half of it as x,y refer to center of rect
+        star = this.createStarPosition( star, {
+            x: 0,
+            y: 0,
+            width: APP.get( 'CANVAS_WIDTH' ),
+            height: APP.get( 'CANVAS_HEIGHT' )
+        })
+
 
         // Calc size, alpha and tint based on distance/brightness/temperature/etc
         star = this.getStarDistance( star )
@@ -99,7 +121,7 @@ export default class Starfield {
         return star
     }
 
-    update( pos = { x: 0, y: 0} ) {
+    update( vel = { x: 0, y: 0 }, pos = { x: 0, y: 0 } ) {
         // for ( let i = 0; i < this.density; i++ ) {
         //     if ( Math.random() > .98 ) {
         //         try {
@@ -112,7 +134,29 @@ export default class Starfield {
         //     }
         // }
 
-        this.container.position.set( pos.x || 0, pos.y || 0 )
+        // Iterate through starfield and kill any out of bounds stars
+        this.container.children.forEach( star => {
+            // Right
+            if ( vel.x > 0 ) {
+                let dist = star.position.x - ( pos.x - APP.get( 'CANVAS_WIDTH' ) )
+
+                if ( dist > 0 ) {
+                    return
+                }
+
+                // this.pool.push( star )
+                // this.container.removeChild( star )
+
+                // Dont remove or fart around with stars, just set their position from
+                // the left edge to the right edge and reset their alpha/scale/tint to
+                // reflect their new position
+                star.position.x = pos.x + APP.get( 'CANVAS_WIDTH' ) + dist
+                this.getStarDistance( star )
+            }
+        })
+
+        this.container.position.x -= vel.x
+        this.container.position.y -= vel.y
     }
 
 }
