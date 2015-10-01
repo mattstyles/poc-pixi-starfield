@@ -33,13 +33,10 @@ export default class Starfield {
             APP.get( 'CANVAS_WIDTH' ) / 2,
             APP.get( 'CANVAS_HEIGHT' ) / 2
         )
-        console.log( this.container.position )
         this.stars = []
-        this.pool = []
         this.tex = null
 
-        // Container density
-        //this.density = .0025 * APP.get( 'CANVAS_WIDTH' ) * APP.get( 'CANVAS_HEIGHT' )
+        // Container star density
         this.density = APP.get( 'NUM_STARS' )
 
         /**
@@ -121,37 +118,78 @@ export default class Starfield {
         return star
     }
 
-    update( vel = { x: 0, y: 0 }, pos = { x: 0, y: 0 } ) {
-        // for ( let i = 0; i < this.density; i++ ) {
-        //     if ( Math.random() > .98 ) {
-        //         try {
-        //             this.stars[ i ].alpha = lerp( Math.random(), this.alpha.min, this.alpha.max )
-        //             //this.stars[ i ].position.set( ~~( Math.random() * APP.get( 'CANVAS_WIDTH' ) ), ~~( Math.random() * APP.get( 'CANVAS_HEIGHT' ) ) )
-        //         } catch ( err ) {
-        //             console.error( 'star', i, 'does not exist' )
-        //         }
-        //
-        //     }
-        // }
+    // @TODO no need for pos to be passed in here, need to be smarter about
+    // which functions need which variables
+    // Pos here refers to game pos, which shouldnt be passed to update but
+    // currently is
+    updateRight( star, pos ) {
+        let dist = star.position.x - ( pos.x - APP.get( 'CANVAS_WIDTH' ) )
 
+        if ( dist > 0 ) {
+            return
+        }
+
+        // Dont remove or fart around with stars, just set their position from
+        // the left edge to the right edge and reset their alpha/scale/tint to
+        // reflect their new position
+        // @TODO density should not be constant, if num of stars in container is
+        // greater than the current density then these stars should not be reborn
+        // on the other side. If num_stars is less than density then new ones should
+        // be created somewhere inside update()
+        star.position.x = pos.x + APP.get( 'CANVAS_WIDTH' ) + dist
+        // randomise x position to counter odd diagonal issues -- UPDATE dont need to
+        //star.position.y = random( pos.y - APP.get( 'CANVAS_HEIGHT' ), pos.y + APP.get( 'CANVAS_HEIGHT' ) )
+        this.getStarDistance( star )
+    }
+
+    updateLeft( star, pos ) {
+        let dist = star.position.x - ( pos.x + APP.get( 'CANVAS_WIDTH' ) )
+        if ( dist < 0 ) { return }
+
+        star.position.x = pos.x - APP.get( 'CANVAS_WIDTH' ) - dist
+        //star.position.y = random( pos.y - APP.get( 'CANVAS_HEIGHT' ), pos.y + APP.get( 'CANVAS_HEIGHT' ) )
+        this.getStarDistance( star )
+    }
+
+    updateDown( star, pos ) {
+        let dist = star.position.y - ( pos.y - APP.get( 'CANVAS_HEIGHT' ) )
+        if ( dist > 0 ) { return }
+
+        star.position.y = pos.y + APP.get( 'CANVAS_HEIGHT' ) + dist
+        //star.position.x = random( pos.x - APP.get( 'CANVAS_WIDTH' ), pos.x + APP.get( 'CANVAS_WIDTH' ) )
+        this.getStarDistance( star )
+    }
+
+    updateUp( star, pos ) {
+        let dist = star.position.y - ( pos.y + APP.get( 'CANVAS_HEIGHT' ) )
+        if ( dist < 0 ) { return }
+
+        star.position.y = pos.y - APP.get( 'CANVAS_HEIGHT' ) - dist
+        //star.position.x = random( pos.x - APP.get( 'CANVAS_WIDTH' ), pos.x + APP.get( 'CANVAS_WIDTH' ) )
+        this.getStarDistance( star )
+    }
+
+    update( vel = { x: 0, y: 0 }, pos = { x: 0, y: 0 } ) {
         // Iterate through starfield and kill any out of bounds stars
         this.container.children.forEach( star => {
             // Right
             if ( vel.x > 0 ) {
-                let dist = star.position.x - ( pos.x - APP.get( 'CANVAS_WIDTH' ) )
+                this.updateRight( star, pos )
+            }
 
-                if ( dist > 0 ) {
-                    return
-                }
+            // left
+            if ( vel.x < 0 ) {
+                this.updateLeft( star, pos )
+            }
 
-                // this.pool.push( star )
-                // this.container.removeChild( star )
+            // down
+            if ( vel.y > 0 ) {
+                this.updateDown( star, pos )
+            }
 
-                // Dont remove or fart around with stars, just set their position from
-                // the left edge to the right edge and reset their alpha/scale/tint to
-                // reflect their new position
-                star.position.x = pos.x + APP.get( 'CANVAS_WIDTH' ) + dist
-                this.getStarDistance( star )
+            // up
+            if ( vel.y < 0 ) {
+                this.updateUp( star, pos )
             }
         })
 

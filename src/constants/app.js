@@ -6,8 +6,7 @@ const APP = toMap({
     CANVAS_DP: window.devicePixelRatio,
 
     // .05% of screen density
-    // NUM_STARS: .0005 * window.innerWidth * window.innerHeight,
-    NUM_STARS: 6000,
+    NUM_STARS: .0005 * window.innerWidth * window.innerHeight,
     STAR_TEX: 'assets/circle32.png',
 
     // Movement
